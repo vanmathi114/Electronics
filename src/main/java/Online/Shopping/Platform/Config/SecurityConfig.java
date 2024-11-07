@@ -24,27 +24,27 @@ public class SecurityConfig {
     public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                );
-
-        return http.build();}
-//    }
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // Adjust CSRF for specific endpoints if needed
-//                .authorizeRequests(authorize -> authorize
-//                        .anyRequest().authenticated() // Require authentication for all requests
-//                )
-//                .exceptionHandling(exceptionHandling -> exceptionHandling
-//                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // Custom entry point
+//        http.exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 //                );
 //
-//        return http.build();
+//        return http.build();}
 //    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // Adjust CSRF for specific endpoints if needed
+                .authorizeRequests(authorize -> authorize
+                        .anyRequest().permitAll() // Require authentication for all requests
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // Custom entry point
+                );
+
+        return http.build();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

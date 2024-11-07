@@ -33,7 +33,11 @@ dependencies {
     //Eureka for service discovery as we use lb
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'io.github.resilience4j:resilience4j-spring-boot2:1.7.1' // For Circuit Breaker
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker'
+    implementation 'io.github.resilience4j:resilience4j-retry'
+
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

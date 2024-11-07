@@ -48,7 +48,7 @@ public class SmartPhoneController {
         try {
             Smartphone smartphone=smartPhoneService.addSmartphone(smartPhone);
             URI uri = URI.create("/api/smartphones/" + smartphone.getId());
-            return ResponseEntity.created(uri).body(smartphone);
+            return ResponseEntity.ok(smartphone);
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
