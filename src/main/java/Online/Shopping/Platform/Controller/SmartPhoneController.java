@@ -7,18 +7,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 import java.util.List;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/smartphones")
+@RequestMapping("/api")
 public class SmartPhoneController {
 
     @Autowired
     private ProductService smartPhoneService;
 
+    @GetMapping("/catagories")
+    public ResponseEntity<List<String>> getAllCatagory() {
+            List<String> catagoryList= Arrays.asList("Electronics", "HomeAppliances", "Smartgadgets");
+            return ResponseEntity.ok(catagoryList);
+    }
+
     // Get all smartphones
-    @GetMapping
+    @GetMapping("/smartphones")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<List<Smartphone>> getAllSmartphones() {
         try{
             List<Smartphone> smartPhones=smartPhoneService.getAllSmartphone();
@@ -32,7 +41,7 @@ public class SmartPhoneController {
     }
 
     // Get a specific smartphone by ID
-    @GetMapping("/{id}")
+    @GetMapping("/smartphones/{id}")
     public ResponseEntity<Smartphone> getSmartphoneById(@PathVariable String id) {
         Smartphone smartphone=smartPhoneService.findSmartPhoneById(id);
         if(smartphone==null) {
@@ -43,7 +52,7 @@ public class SmartPhoneController {
 
 
     // Add a new smartphone
-    @PostMapping
+    @PostMapping("/smartphones")
     public ResponseEntity<Smartphone> addSmartphone(@RequestBody Smartphone smartPhone) {
         try {
             Smartphone smartphone=smartPhoneService.addSmartphone(smartPhone);
@@ -55,19 +64,19 @@ public class SmartPhoneController {
     }
 
     // Update the cost of a smartphone (for admin use)
-    @PutMapping("/{id}/update-cost")
+    @PutMapping("/smartphones/{id}/update-cost")
     public void updateSmartphoneCost(@PathVariable String id, @RequestParam Double cost) {
         smartPhoneService.updateCost(id, cost);
     }
 
     // Purchase a smartphone (this involves making a payment through the Payment microservice)
-    @PostMapping("/purchase")
+    @PostMapping("/smartphones/purchase")
     public ResponseEntity<String> purchaseSmartphone(@RequestParam Double amount, @RequestParam String currency) {
         return ResponseEntity.ok(smartPhoneService.purchaseSmartphone(amount, currency).toString());
     }
     
     // Get payment details (test the connection with PaymentService)
-    @GetMapping("/payment/{id}")
+    @GetMapping("/smartphones/payment/{id}")
     public ResponseEntity<String> getPayment(@PathVariable String id) {
         return ResponseEntity.ok(smartPhoneService.getPayment(id).toString());
     }
