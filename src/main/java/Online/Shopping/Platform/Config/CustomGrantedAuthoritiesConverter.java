@@ -15,11 +15,15 @@ public class CustomGrantedAuthoritiesConverter {
     public Collection<GrantedAuthority> convert(Jwt jwt) {
         // Get the authorities from the JWT token
         Collection<GrantedAuthority> authorities = defaultConverter.convert(jwt);
-        GrantedAuthority authority1 = new SimpleGrantedAuthority("admin");
-        authorities.add(authority1);
-//        return authorities;
+        if(jwt.getClaims().get("roles").toString().contains("ADMIN")) {
+            GrantedAuthority authority = new SimpleGrantedAuthority("admin");
+            authorities.add(authority);
+        }
 
-        // Return authorities directly as your roles already don't have the 'ROLE_' prefix
+        if(jwt.getClaims().get("roles").toString().contains("CUSTOMER")) {
+            GrantedAuthority authority = new SimpleGrantedAuthority("customer");
+            authorities.add(authority);
+        }
         return authorities.stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))  // No change needed if no prefix
                 .collect(Collectors.toList());

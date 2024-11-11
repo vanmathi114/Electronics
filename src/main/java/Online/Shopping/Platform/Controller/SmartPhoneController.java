@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.net.URI;
@@ -21,13 +22,18 @@ public class SmartPhoneController {
 
     @GetMapping("/catagories")
     public ResponseEntity<List<String>> getAllCatagory() {
-            List<String> catagoryList= Arrays.asList("Electronics", "HomeAppliances", "Smartgadgets");
+            List<String> catagoryList=new ArrayList<>();
+            List<Smartphone> smartPhones=smartPhoneService.getAllSmartphone();
+            if(!smartPhones.isEmpty()) {
+                catagoryList.add("ELECTRONICS");
+            }
+            catagoryList.add("HOME APPLIANCES");
+            catagoryList.add("SMART GADGETS");
             return ResponseEntity.ok(catagoryList);
     }
 
     // Get all smartphones
     @GetMapping("/smartphones")
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<List<Smartphone>> getAllSmartphones() {
         try{
             List<Smartphone> smartPhones=smartPhoneService.getAllSmartphone();
@@ -65,18 +71,21 @@ public class SmartPhoneController {
 
     // Update the cost of a smartphone (for admin use)
     @PutMapping("/smartphones/{id}/update-cost")
+    @PreAuthorize("hasAuthority('admin')")
     public void updateSmartphoneCost(@PathVariable String id, @RequestParam Double cost) {
         smartPhoneService.updateCost(id, cost);
     }
 
     // Purchase a smartphone (this involves making a payment through the Payment microservice)
     @PostMapping("/smartphones/purchase")
+    @PreAuthorize("hasAuthority('customer')")
     public ResponseEntity<String> purchaseSmartphone(@RequestParam Double amount, @RequestParam String currency) {
         return ResponseEntity.ok(smartPhoneService.purchaseSmartphone(amount, currency).toString());
     }
     
     // Get payment details (test the connection with PaymentService)
     @GetMapping("/smartphones/payment/{id}")
+    @PreAuthorize("hasAuthority('customer')")
     public ResponseEntity<String> getPayment(@PathVariable String id) {
         return ResponseEntity.ok(smartPhoneService.getPayment(id).toString());
     }

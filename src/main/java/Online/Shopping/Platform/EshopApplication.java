@@ -22,24 +22,5 @@ public class EshopApplication {
 		SpringApplication.run(EshopApplication.class, args);
 
 	}
-//	@Bean
-//	CommandLineRunner run(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-//		return args -> {
-//			Role adminRole = roleRepository.save(new Role("1","admin" ));
-//			Role customerRole = roleRepository.save(new Role("2","customer"));
-//
-//			User admin = new User();
-//			admin.setUsername("admin");
-//			admin.setPassword(passwordEncoder.encode("password"));
-//			admin.setRoles(Set.of(adminRole));
-//			userRepository.save(admin);
-//
-//			User customer = new User();
-//			customer.setUsername("customer");
-//			customer.setPassword(passwordEncoder.encode("password"));
-//			customer.setRoles(Set.of(customerRole));
-//			userRepository.save(customer);
-//		};
-//	}
 
 }
